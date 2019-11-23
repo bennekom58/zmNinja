@@ -37,18 +37,18 @@ if [ "$BUILD_MODE" = "xwalk" ] || [ "$BUILD_MODE" = "all" ]; then
     echo "--------------------------------------------"
     echo "Removing android and re-adding..."
     cordova platform remove android
-    cordova platform add android
-    cordova plugin remove cordova-plugin-crosswalk-webview
+    cordova platform add android@6.3.0
+    cordova plugin remove cordova-plugin-crosswalk-webview --nosave
     echo "Adding crosswalk..."
     #cordova plugin add cordova-plugin-crosswalk-webview
-    cordova plugin add cordova-plugin-crosswalk-webview@2.2.0  --variable XWALK_MODE="lite" --variable "XWALK_VERSION"="17.46.459.1"
+    cordova plugin add cordova-plugin-crosswalk-webview@2.2.0  --variable XWALK_MODE="lite" --variable "XWALK_VERSION"="17.46.459.1" --nosave
     #cordova plugin add cordova-plugin-crosswalk-webview --variable XWALK_VERSION="22+"
     #ionic plugin add cordova-plugin-crosswalk-webview 
     # crosswalk handles SSL certificate handling in a different way
     # need to switch plugins
     echo "Adding crosswalk cert plugin..."
-    cordova plugin remove cordova-plugin-certificates
-    cordova plugin add https://github.com/danjarvis/cordova-plugin-crosswalk-certificate
+    cordova plugin remove cordova-plugin-certificates --nosave
+    cordova plugin add  cordova-plugin-crosswalk-certificate-pp-fork --nosave
     cp "$NINJAKEYSTORE" platforms/android/
     echo "Building XWALK ..."
     #cordova build android --release  -- --targetSdkVersion=23
@@ -81,18 +81,15 @@ if [ "$BUILD_MODE" = "native" ] || [ "$BUILD_MODE" = "all" ]; then
     
     echo "Removing android and re-adding..."
     cordova platform remove android
-    cordova platform add android
+    cordova platform add android@6.3.0
 
    #clean up past build stuff
     echo "Adding default browser..."
     cordova plugin remove cordova-plugin-crosswalk-webview
 
     # use the right plugin for SSL certificate mgmt
-    cordova plugin remove cordova-plugin-crosswalk-certificate
-    cordova plugin add https://github.com/hypery2k/cordova-certificate-plugin.git
-    #cordova plugin add https://github.com/hypery2k/cordova-certificate-plugin
-    #ionic platform remove android
-    #ionic platform add android
+    cordova plugin remove cordova-plugin-crosswalk-certificate-pp-fork
+    cordova plugin add cordova-plugin-certificates
     cp "$NINJAKEYSTORE" platforms/android/
 
     # Make sure native builds are only deployed in devices < Android 5

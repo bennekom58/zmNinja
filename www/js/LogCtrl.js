@@ -91,7 +91,7 @@ angular.module('zmApp.controllers').controller('zmApp.LogCtrl', ['$scope', '$roo
       .then(function (res) {
         if (res) {
 
-          logstring = "zmNinja version:" + $scope.zmAppVersion +
+          logstring = "Bewaking58 version:" + $scope.zmAppVersion +
             " (" + $rootScope.platformOS + ")\n" +
             "ZoneMinder version:" + NVRDataModel.getCurrentServerVersion() + "\n" +
             logstring;

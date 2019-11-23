@@ -50,8 +50,8 @@ angular.module('zmApp', [
     gcmSenderId: '710936220256',
     httpTimeout: 15000,
     largeHttpTimeout: 60000,
-    logFile: 'zmNinjaLog.txt',
-    authoremail: 'pliablepixels+zmNinja@gmail.com',
+    logFile: 'BewakingLog.txt',
+    authoremail: 'dont@compla.in',
     logFileMaxSize: 20000, // after this limit log gets reset
 
     updateCheckInterval: 86400000, // 24 hrs
@@ -1006,7 +1006,8 @@ angular.module('zmApp', [
 
         // This is a good time to check if auth is used :-p
         if (!ld.isUseAuth) {
-          NVRDataModel.log("Auth is disabled!");
+          NVRDataModel.log("Auth is disabled, setting authSession to ''");
+          $rootScope.authSession='';
           d.resolve("Login Success");
 
           $rootScope.$broadcast('auth-success', 'no auth');
@@ -1239,7 +1240,7 @@ angular.module('zmApp', [
         NVRDataModel.displayBanner('success', ['Storage permission acquired'], "", 4000);
       }
 
-      $rootScope.appName = "zmNinja";
+      $rootScope.appName = "Bewaking58";
       $rootScope.zmGlobalCookie = "";
       $rootScope.isEventFilterOn = false;
       $rootScope.fromDate = "";
@@ -1730,13 +1731,13 @@ angular.module('zmApp', [
           // org.apache.cordova.statusbar required
           //  console.log("statusbar");
           NVRDataModel.log("Updating statusbar");
-          StatusBar.styleDefault();
+          StatusBar.styleBlackTranslucent();
           if ($rootScope.platformOS == 'ios') {
             // console.log ("<<<<<<<<<<<<<<<< OVERLAY");
             StatusBar.overlaysWebView(false);
           }
 
-          StatusBar.backgroundColorByHexString("#2980b9");
+          StatusBar.backgroundColorByHexString("#3a2266");
         }
 
         if (window.cordova) {
@@ -1942,8 +1943,7 @@ angular.module('zmApp', [
           $interval.cancel($rootScope.eventQueryInterval);
           $interval.cancel($rootScope.intervalHandle);
           zmAutoLogin.stop();
-          if ($rootScope.zmPopup)
-            $rootScope.zmPopup.close();
+          
 
 
           // NVRDataModel.log("ROOT APP: Stopping network ");
@@ -1959,9 +1959,24 @@ angular.module('zmApp', [
 
           if (ld.exitOnSleep && $rootScope.platformOS == "android") {
             NVRDataModel.log("user exited app");
-            window.stop();
+            navigator.app.exitApp();
+
             //  ionic.Platform.exitApp();
           }
+
+          if (NVRDataModel.getCurrentServerMultiPortSupported() && $rootScope.platformOS == "android" && !NVRDataModel.isMultiPortDisabled()) {
+            NVRDataModel.log ("Multiport is active, killing app to make sure no streams continue in background...");
+            navigator.app.exitApp();
+          } else {
+            NVRDataModel.debug ("Not exiting app because:");
+            NVRDataModel.debug ("getCurrentServerMultiPortSupported:"+NVRDataModel.getCurrentServerMultiPortSupported());
+            NVRDataModel.debug ("platform:"+$rootScope.platformOS);
+            NVRDataModel.debug ("isMultiPortDisabled:"+NVRDataModel.isMultiPortDisabled());
+
+          }
+
+          if ($rootScope.zmPopup)
+            $rootScope.zmPopup.close();
 
         }, false);
 

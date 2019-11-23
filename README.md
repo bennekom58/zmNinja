@@ -1,80 +1,69 @@
-![](https://github.com/pliablepixels/zmNinja/blob/master/sample_images/zmn.png?raw=true "icon") 
+# Bewaking58
+This is a forked version of [zmNinja](https://github.com/pliablepixels/zmNinja) application, modified and customized for personal purposes. Please do not use this repo, instead check the original app which is great and supported!
 
-[zmNinja website](http://pliablepixels.github.io)
+## Compiling
+This was done using Debian 8.1 Jessie 64bit:
 
-zmNinja is a multi platform (iOS, Android, Windows Desktop, Mac Desktop, Linux Desktop) client for ZoneMinder users.
-[ZoneMinder](http://www.zoneminder.com) is an incredible open source camera monitoring system and is used
-by many for home and commercial security monitoring. 
+1. **Linux basics for building form source:**
+```bash
+sudo apt-get install build-essential git curl
+```
 
+2. **Java Development Kit and Runtime Environment (from backports):**
+```bash
+echo -e "\ndeb http://http.debian.net/debian jessie-backports main" | sudo tee -a /etc/apt/sources.list && sudo apt-get update && sudo apt-get install -t jessie-backports openjdk-8-jdk && sudo update-java-alternatives --set java-1.8.0-openjdk-amd64 && java -version
+```
 
-<a href="https://itunes.apple.com/us/app/zmninja-pro/id1067914954?mt=8"><img src="http://www.pbase.com/arjunrc/image/162132546/original.jpg" width="200px" alt="Get in on App Store"></a>
-<a href="https://play.google.com/store/apps/details?id=com.pliablepixels.zmninja_pro&hl=en&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1"><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" width="200px"/></a>
+3. **NodeJS v6.11.2:**
+```bash
+wget https://deb.nodesource.com/node_6.x/pool/main/n/nodejs/nodejs_6.11.2-1nodesource1~jessie1_amd64.deb && sudo dpkg -i nodejs_6.11.2-1nodesource1~jessie1_amd64.deb && nodejs -v
+```
 
+4. **NPM v5.8.0:**
+```bash
+sudo npm install -g npm@5.8.0 && npm -v
+```
 
-Problems with zmNinja?
------------------------
-zmNinja has a detailed [FAQ](https://github.com/pliablepixels/zmNinja/wiki/FAQ). Please do read it - it has answers to many common questions.
+5. **Avoid NPM sudo-hell:**
+```bash
+mkdir -p ~/.npm-packages/bin && npm config set prefix ~/.npm-packages && npm list -g --depth=0 && echo -e "\nexport PATH=$HOME/.npm-packages/bin:\$PATH" >> ~/.bashrc && source ~/.bashrc
+```
 
-Video Demo
--------------
-Check out a video demo of zmNinja [here](https://youtu.be/prtA_mv68Ok)
+6. **Cordova, iONIC, Bower (also set backend to legacy):**
+```bash
+npm install -g cordova ionic bower && ionic config set -g backend legacy && ionic info
+```
 
-Mobile Platforms
----------------------------
-zmNinja is  stable as of today and runs on a variety of Android and iOS platforms.
-See links above to get them on play store (Android) and app store (iOS)
+7. **Some more build-requirements (gulp, node-sass, async, jshint):**
+```bash
+npm install -g gulp && npm install node-sass async jshint
+```
 
-It also runs on the desktop (see below)
+8. **Apache Maven 3.1.1:**
+```bash
+wget http://apache.hippo.nl/maven/maven-3/3.1.1/binaries/apache-maven-3.1.1-bin.tar.gz && sudo tar -zxf apache-maven-3.1.1-bin.tar.gz -C /usr/local && sudo mv /usr/local/apache-maven-3.1.1 /usr/local/maven && echo -e "\nexport M2_HOME=/usr/local/maven\nexport M2=\$M2_HOME/bin\nexport MAVEN_OPTS=\"-Xms256m -Xmx512m\"\nexport PATH=\$M2:\$PATH" >> ~/.profile && source ~/.profile && mvn -v
+```
 
-Desktop Platforms
------------------
-Please download binaries for Win 7, Linux or Mac from [here](https://github.com/pliablepixels/zmNinja/releases). 
-Please make sure you download the correct ZIP file (32/64 bit)
+9. **Android SDK+Platform 23 with GoogleApi & Play:**
+```bash
+wget https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip -O sdk-tools-linux.zip && mkdir -p ~/android/sdk && unzip sdk-tools-linux.zip -d ~/android/sdk/ && echo -e "\nexport ANDROID_HOME=$HOME/android/sdk\nexport PATH=$HOME/android/sdk/tools/bin:$HOME/android/sdk/platform-tools:\$PATH" >> ~/.bashrc && source ~/.bashrc && sdkmanager "platform-tools" "platforms;android-23" "add-ons;addon-google_apis-google-23"  "extras;google;google_play_services" && sdkmanager update
+```
 
+10. **Gradle 4.6:**
+```bash
+sudo wget https://services.gradle.org/distributions/gradle-4.6-bin.zip -O /opt/gradle-4.6-bin.zip && sudo unzip /opt/gradle-4.6-bin.zip -d /opt && echo -e "\nexport GRADLE_HOME=/opt/gradle-4.6\nexport PATH=/opt/gradle-4.6/bin:\$PATH" >> ~/.bashrc && source ~/.bashrc && gradle -v
+```
 
-Key Features (just watch the video already)
---------------------------------------------
-* Push Notifications for alarms (Needs the [eventserver](https://github.com/pliablepixels/zmeventserver) to be set up)
-* Multiple languages (English, French, German, Spanish, Portugese, Dutch, and more)
-* H264 video branch support 
-* live views of monitors
-* Montage view (with multiple montage profile settings/sizes)
-* Events history and list
-* Timeline view
-* Camera pan/tilt/zoom (needs to have ZM support it first)
+9. **Prepare the build:**
+```bash
+cordova prepare
+``` 
 
-Thanks
-------
-To the zonemider community in general, and the awesome Stack Overflow community.
-But specifically, [Andrew Bauer](https://github.com/knnniggett) (knnniggett) who egged me on to take up this project.
+### Android
+2. **Build the `.apk`:**
+```bash
+ionic cordova build android
+```
 
-Important Notes
----------------
-* zmNinja needs APIs enabled in ZoneMinder. If you are running ZM 1.29 or above, APIs should automatically be available. See [this](https://github.com/pliablepixels/zmNinja/wiki/Validating-if-APIs-work-on-ZM) for instructions on how to make sure your APIs are working. If they are not working, zmNinja **will not** work.
-
-Before you ask for help
------------------------
-* Make sure you have read the [FAQ](https://github.com/pliablepixels/zmNinja/wiki/FAQ)
-* Make sure you have [validated](https://github.com/pliablepixels/zmNinja/wiki/Validating-if-APIs-work-on-ZM) that your APIs are working (if not, its a ZM issue, please post in ZM forums)
-* Please don't ask me for help with source compilation if you are not familiar with coding mobile apps - you should try and solve your own problems
-
-
-Objective
-----------
-I wanted to learn how to write a mobile app. It was (and is) fun. 
-
-Running from source
-----------------------
-Please follow [these](https://github.com/pliablepixels/zmNinja/wiki/Running-zmNinja-from-Source) instructions.
-
-
-Screenshots:
-------------
-![](https://github.com/pliablepixels/zmNinja/blob/master/sample_images/IMG_0757.PNG?raw=true)
-![](https://github.com/pliablepixels/zmNinja/blob/master/sample_images/IMG_0758.PNG?raw=true)
-![](https://github.com/pliablepixels/zmNinja/blob/master/sample_images/IMG_0759.PNG?raw=true)
-![](https://github.com/pliablepixels/zmNinja/blob/master/sample_images/IMG_0760.PNG?raw=true)
-![](https://github.com/pliablepixels/zmNinja/blob/master/sample_images/IMG_0761.PNG?raw=true)
-![](https://github.com/pliablepixels/zmNinja/blob/master/sample_images/IMG_0762.PNG?raw=true)
-
-
+### Desktop
+Here comes the steps for building the desktop app...
